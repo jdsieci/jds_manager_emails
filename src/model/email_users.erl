@@ -2,10 +2,10 @@
 %% Created: 24-02-2013
 %% Description: TODO: Add description to virtual_users
 -module(email_users,[Id,
-                       Username,
-                       Password,
-                       EmailDomainsId,
-                       ClientId]).
+                     Username,
+                     Password,
+                     EmailDomainsId,
+                     ClientId]).
 -belongs_to(email_domains).
 %%
 %% Include files
