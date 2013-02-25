@@ -2,7 +2,7 @@
 %% Created: 24-02-2013
 
 -module(email_aliases, [Id,
-                        Email_DomainsId,
+                        EmailDomainsId,
                         Source,
                         Destination,
                         ClientId]).
