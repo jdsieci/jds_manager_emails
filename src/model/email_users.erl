@@ -4,7 +4,7 @@
 -module(email_users,[Id,
                        Username,
                        Password,
-                       Virtual_DomainsId,
+                       EmailDomainsId,
                        ClientId]).
 -belongs_to(email_domains).
 %%
