@@ -1,0 +1,1 @@
+-record(email_users, {id, username, password, email_domains_id, client_id}).

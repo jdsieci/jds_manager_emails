@@ -1,0 +1,1 @@
+-record(email_domains, {id, name, client_id}).

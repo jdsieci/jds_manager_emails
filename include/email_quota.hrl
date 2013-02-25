@@ -1,0 +1,1 @@
+-record(email_quota, {id, email_users_id, rule_order, rule, client_id}).
