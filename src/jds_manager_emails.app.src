@@ -1,0 +1,8 @@
+{application, jds_manager_emails, [
+        {description, "Email account manager for Postfix and Dovecot"},
+        {vsn, "0.0.1"},
+        {modules, []},
+        {registered, []},
+        {applications, [kernel, stdlib, crypto, boss]},
+        {env, []}
+    ]}.
