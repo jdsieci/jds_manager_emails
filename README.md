@@ -1,4 +1,4 @@
 jds_manager.emails
 ==================
 
-Emails Manger
+Email Accounts Manager
