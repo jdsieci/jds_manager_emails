@@ -1,0 +1,15 @@
+{% extends "universe.html" %}
+{% block body %}
+<form>
+Username: <input name="username" type="text"/>
+<select>
+{% for domain in domains %}
+<option value="{{domain.id}}">{{domain.name}}</option>
+{%endfor%}
+</select>
+<br/>
+Password: <input name="password" type="password"/><br/>
+Repeat Passowrd: <input name="password2" type="password"/><br/>
+<input type="submit" value="Submit">
+</form>
+{% endblock %}
