@@ -1,0 +1,14 @@
+{% extends "universe.html" %}
+{% block body %}
+<a href="add">Add</a>
+<table>
+<tr>
+<th>No</th><th>Username</th>
+</tr>
+{% for user in users %}
+<tr>
+<td>{{forloop.counter}}</td><td>{{user.username}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
