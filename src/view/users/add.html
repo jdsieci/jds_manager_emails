@@ -2,7 +2,7 @@
 {% block body %}
 <form method="post">
 Username: <input name="username" type="text"/>
-<select>
+<select name="domainid">
 {% for domain in domains %}
 <option value="{{domain.id}}">{{domain.name}}</option>
 {%endfor%}
