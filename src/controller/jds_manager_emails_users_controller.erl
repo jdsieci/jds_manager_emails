@@ -32,6 +32,10 @@ add('GET', [Domain]) ->
     Domains = boss_db:find(email_domains, [{name, 'equals', Domain}]),
     {ok, [{domains, Domains}]};
 add('POST', []) ->
+    {Username, Password, DomainID} = get_from_post(["username", "password", "domainid"]),
+    % TODO: Ustawic pobieranie ID clienta z sesji
+    NewUser = email_users:new(id, Username, Password, DomainID, 1),
+    {ok, SavedUser} = NewUser:save(),
     {redirect, {action, "list"}};
 add('POST', [Domain]) ->
     {redirect, [{action, "list"}, {domain, Domain}]}.
@@ -42,3 +46,7 @@ del('POST', []) ->
 %% Local Functions
 %%
 
+get_from_post() ->
+    {Req:post_param("username"),
+    Req:post_param("password"),
+    Req:post_param("domainid")}.
