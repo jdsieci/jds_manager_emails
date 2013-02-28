@@ -36,7 +36,7 @@ add('POST', []) ->
     % TODO: Ustawic pobieranie ID clienta z sesji
     NewUser = email_users:new(id, Username, Password, DomainID, 1),
     {ok, SavedUser} = NewUser:save(),
-    {redirect, {action, "list"}};
+    {redirect, [{action, "list"}]};
 add('POST', [Domain]) ->
     {ok, #email_domains{id=DomainId}} = boss_db:find(email_domains, [{name, 'equals', Domain}]),
     {Username, Password, Password2} = get_from_post(["username", "password", "password2"]),
