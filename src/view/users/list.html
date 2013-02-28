@@ -2,13 +2,19 @@
 {% block body %}
 <a href="add">Add</a>
 <table>
+<thead>
 <tr>
-<th>No</th><th>Username</th>
+<th>No</th><th>Username</th><th/><th/>
 </tr>
+</thead>
+<tbody>
 {% for user in users %}
 <tr>
-<td>{{forloop.counter}}</td><td>{{user.username}}</td>
+    <td>{{forloop.counter}}</td><td>{{user.username}}</td>
+    <td><a href="{% url action="edit" %}/{{user.id}}">Edit</a></td>
+    <td><a href="{% url action="delete" %}/{{user.id}}">Delete</a></td>
 </tr>
 {% endfor %}
+</tbody>
 </table>
 {% endblock %}

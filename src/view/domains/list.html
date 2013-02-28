@@ -4,11 +4,16 @@
 <table>
 <tr>
 <th>No</th><th>Domain Name</th>
+<thead>
 </tr>
+</thead>
+<tbody>
 {% for domain in domains %}
 <tr>
-<td>{{forloop.counter}}</td><td>{{domain.name}}</td>
+    <td>{{forloop.counter}}</td><td>{{domain.name}}</td>
+    <td><a href="{% url action="delete" %}/{{domain.id}}">Delete</a></td>
 </tr>
 {% endfor %}
+</tbody>
 </table>
 {% endblock %}
