@@ -1,0 +1,14 @@
+{% extends "universe.html" %}
+{% block body %}
+<a href="add">Add</a>
+<table>
+<tr>
+<th>No</th><th>Domain Name</th>
+</tr>
+{% for domain in domains %}
+<tr>
+<td>{{forloop.counter}}</td><td>{{domain.name}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
