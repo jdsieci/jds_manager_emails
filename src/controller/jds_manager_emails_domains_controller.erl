@@ -11,7 +11,7 @@
 %%
 %% Exported Functions
 %%
--export([list/2, add/2, del/2]).
+-export([list/2, add/2, delete/2]).
 
 %%
 %% API Functions
@@ -31,8 +31,10 @@ add('POST', []) ->
     {ok, SavedDomain} = NewDomain:save(),
     {redirect, [{action, "list"}]}.
 
-
-del('POST', []) ->
+delete('GET', [DomainID]) ->
+    boss_db:delete(DomainID),
+    {redirect, [{action, "list"}]};
+delete('POST', []) ->
     boss_db:delete(Req:post_param("domain_id")),
     {redirect, [{action, "list"}]}.
 
