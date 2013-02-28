@@ -37,16 +37,17 @@ add('POST', []) ->
         redirect ->
             {redirect, [{action, "list"}]};
         {ok, Rest} ->
-            Domains = boss_db:find(email_domains, [{name, 'equals', Domain}]),
+            Domains = boss_db:find(email_domains, []),
             {ok, [{domains, Domains} | Rest]}
     end;
 add('POST', [Domain]) ->
-    {ok, #email_domains{id=DomainID} = DomainRecord} = boss_db:find(email_domains, [{name, 'equals', Domain}]),
+    {ok, DomainRecord} = boss_db:find(email_domains, [{name, 'equals', Domain}]),
     {Username, Password, Password2} = get_from_post(["username", "password", "password2"]),
-    case add_user(Username, Password, DomainID) of
+    case add_user(Username, Password, DomainRecord#email_domains.id) of
         redirect ->
             {redirect, [{action, "list"}, {domain, Domain}]};
         {ok, Rest} ->
+            Domains = boss_db:find(email_domains, [{name, 'equals', Domain}]),
             {ok, [{domains, DomainRecord} | Rest]}
     end.
 
@@ -66,7 +67,7 @@ get_from_post([], Acc) ->
 get_from_post([Field | Rest], Acc) ->
     get_from_post(Rest, [Req:post_param(Field) | Acc]).
 
-add_user(UserName, Password, DomainID, Redirect) ->
+add_user(Username, Password, DomainID) ->
     % TODO: Ustawic pobieranie ID clienta z sesji
     NewUser = email_users:new(id, Username, Password, DomainID, 1),
     case NewUser:save() of
