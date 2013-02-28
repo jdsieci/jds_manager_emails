@@ -1,5 +1,12 @@
 {% extends "universe.html" %}
 {% block content %}
+{% if errors %}
+<ul>
+{% for error in errors %}
+<li><font color=red>{{ error }}</font>
+{% endfor %}
+</ul>
+{% endif %}
 <form method="post">
 Username: <input name="username" type="text"/>
 <select name="domainid">

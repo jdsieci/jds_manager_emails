@@ -33,16 +33,22 @@ add('GET', [Domain]) ->
     {ok, [{domains, Domains}]};
 add('POST', []) ->
     {Username, Password, Password2, DomainID} = get_from_post(["username", "password", "password2", "domainid"]),
-    % TODO: Ustawic pobieranie ID clienta z sesji
-    NewUser = email_users:new(id, Username, Password, DomainID, 1),
-    {ok, SavedUser} = NewUser:save(),
-    {redirect, [{action, "list"}]};
+    case add_user(Username, Password, DomainID) of
+        redirect ->
+            {redirect, [{action, "list"}]};
+        {ok, Rest} ->
+            Domains = boss_db:find(email_domains, [{name, 'equals', Domain}]),
+            {ok, [{domains, Domains} | Rest]}
+    end;
 add('POST', [Domain]) ->
-    {ok, #email_domains{id=DomainID}} = boss_db:find(email_domains, [{name, 'equals', Domain}]),
+    {ok, #email_domains{id=DomainID} = DomainRecord} = boss_db:find(email_domains, [{name, 'equals', Domain}]),
     {Username, Password, Password2} = get_from_post(["username", "password", "password2"]),
-    NewUser = email_users:new(id, Username, Password, DomainID, 1),
-    {ok, SavedUser} = NewUser:save(),
-    {redirect, [{action, "list"}, {domain, Domain}]}.
+    case add_user(Username, Password, DomainID) of
+        redirect ->
+            {redirect, [{action, "list"}, {domain, Domain}]};
+        {ok, Rest} ->
+            {ok, [{domains, DomainRecord} | Rest]}
+    end.
 
 delete('GET', [UserId]) ->
     boss_db:delete(UserId),
@@ -59,3 +65,13 @@ get_from_post([], Acc) ->
     list_to_tuple(lists:reverse(Acc));
 get_from_post([Field | Rest], Acc) ->
     get_from_post(Rest, [Req:post_param(Field) | Acc]).
+
+add_user(UserName, Password, DomainID, Redirect) ->
+    % TODO: Ustawic pobieranie ID clienta z sesji
+    NewUser = email_users:new(id, Username, Password, DomainID, 1),
+    case NewUser:save() of
+        {ok, SavedUser} ->
+            redirect;
+        {error, ErrorList} ->
+            {ok, [{errors, ErrorList}, {new_user, NewUser}]}
+    end.
