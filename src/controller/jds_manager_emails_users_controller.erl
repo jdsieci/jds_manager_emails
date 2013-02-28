@@ -12,7 +12,7 @@
 %%
 %% Exported Functions
 %%
--export([list/2, add/2]).
+-export([list/2, add/2, del/2]).
 
 %%
 %% API Functions
@@ -23,7 +23,7 @@ list('GET', []) ->
 list('GET', [Domain]) ->
     {ok, #email_domains{id=DomainId}} = boss_db:find(email_domains, [{name, 'equals', Domain}]),
     Users = boss_db:find(email_users, [{email_domains_id, 'equals', DomainId}]),
-    {ok, [{users, Users}]}.
+    {ok, [{users, Users}, {domain, Domain}]}.
 
 add('GET', []) ->
     Domains = boss_db:find(email_domains, []),
@@ -32,21 +32,27 @@ add('GET', [Domain]) ->
     Domains = boss_db:find(email_domains, [{name, 'equals', Domain}]),
     {ok, [{domains, Domains}]};
 add('POST', []) ->
-    {Username, Password, DomainID} = get_from_post(["username", "password", "domainid"]),
+    {Username, Password, Password2 DomainID} = get_from_post(["username", "password", "password2", "domainid"]),
     % TODO: Ustawic pobieranie ID clienta z sesji
     NewUser = email_users:new(id, Username, Password, DomainID, 1),
     {ok, SavedUser} = NewUser:save(),
     {redirect, {action, "list"}};
 add('POST', [Domain]) ->
+    {ok, #email_domains{id=DomainId}} = boss_db:find(email_domains, [{name, 'equals', Domain}]),
+    {Username, Password, Password2} = get_from_post(["username", "password", "password2"]),
+    NewUser = email_users:new(id, Username, Password, DomainID, 1),
+    {ok, SavedUser} = NewUser:save(),
     {redirect, [{action, "list"}, {domain, Domain}]}.
 
 del('POST', []) ->
+    boss_db:delete(Req:post_param("user_id")),
     {redirect, {action, "list"}}.
 %%
 %% Local Functions
 %%
-
-get_from_post() ->
-    {Req:post_param("username"),
-    Req:post_param("password"),
-    Req:post_param("domainid")}.
+get_from_post(Fields) ->
+    get_from_post(Fields, []).
+get_from_post([], Acc) ->
+    list_to_tuple(lists:reverse(Acc));
+get_from_post([Field | Rest], Acc) ->
+    get_from_post(Rest, [Req:post_param(Field) | Acc]).
