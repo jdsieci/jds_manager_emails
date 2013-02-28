@@ -5,6 +5,15 @@
 </head>
 <body>
 {% block body %}
+<div id="mainmenu">
+{% block mainmenu %}
+{% include "menu.html" %}
+{% endblock %}
+</div>
+<div id="content">
+{% block content %}
+{% endblock %}
+</div>
 {% endblock %}
 </body>
 </html>
