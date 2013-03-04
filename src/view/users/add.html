@@ -2,16 +2,22 @@
 {% block content %}
 {% if errors %}
 <ul>
-{% for error in errors %}
-<li><font color=red>{{ error }}</font>
-{% endfor %}
+{%for error in errors%}
+<li><font color="red">{{error}}</font>
+{%endfor%}
 </ul>
 {% endif %}
 <form method="post">
-Username: <input name="username" type="text"/>
+{%if new_user %}
+Username: <input name="username" type="text" value="{{new_user.username}}"/>
+{%endif%}
 <select name="domainid">
 {% for domain in domains %}
+{%if domain.id == new_user.email_domains_id%}
+    <option value="{{domain.id}}" selected="selected">{{domain.name}}</option>
+{%else%}
 <option value="{{domain.id}}">{{domain.name}}</option>
+{%endif%}
 {%endfor%}
 </select>
 <br/>
