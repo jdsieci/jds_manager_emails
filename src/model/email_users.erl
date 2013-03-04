@@ -4,7 +4,7 @@
 %% Description: TODO: Add description to virtual_users
 -module(email_users,[Id,
                      Username::string(),
-                     Password::string(),
+                     Password,
                      EmailDomainsId,
                      ClientId::integer()]).
 -belongs_to(email_domains).
