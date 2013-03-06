@@ -70,7 +70,7 @@ edit('GET', [UserId]) ->
 edit('POST', [UserId]) ->
     {Id, UserName, Password, Password2, DomainId} = get_from_post(["id", "username", "password", "password2", "domainid"]),
     User = boss_db:find(UserId),
-    case edit_user(User, [{username, UserName}, {password, Password}, {domain, DomainId}]) of
+    case edit_user(User, [{username, UserName}, {password, Password}, {email_domains_id, DomainId}]) of
         redirect ->
             {redirect, [{action, "list"}]};
         {ok, Rest} ->
@@ -98,16 +98,11 @@ add_user(Username, Password, DomainID) ->
             {ok, [{errors, ErrorList}, {new_user, NewUser}]}
     end.
 
-edit_user(User, []) ->
+edit_user(User, PropList) ->
+    User:set(PropList),
     case User:save() of
         {ok, SavedUser} ->
             redirect;
         {error, ErrorList} ->
             {ok, [{errors, ErrorList}, {user, User}]}
-    end;
-edit_user(User, [{username, UserName} | Tail]) ->
-    edit_user(User:set(username, UserName), Tail);
-edit_user(User, [{password, Password} | Tail]) ->
-    edit_user(User:set(password, Password), Tail);
-edit_user(User, [{domain, DomainId} | Tail]) ->
-    edit_user(User:set(email_domains_id, DomainId),Tail).
+    end.
