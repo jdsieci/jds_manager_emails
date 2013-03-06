@@ -15,7 +15,10 @@
 %%
 %% Exported Functions
 %%
--export([validation_tests/0, constraints_create/0, before_create/0]).
+-export([validation_tests/0,
+         constraints_create/0,
+         before_create/0,
+         before_update/0]).
 
 %%
 %% API Functions
@@ -33,8 +36,17 @@ constraints_create() ->
 
 
 before_create() ->
-    ok.
+    ModifiedRecord = set(password, hash_password()),
+    {ok, ModifiedRecord}.
+
+before_update() ->
+    ModifiedRecord = set(password, hash_password()),
+    {ok, ModifiedRecord}.
+
 
 %%
 %% Local Functions
 %%
+
+hash_password() ->
+    lists:flatten([io_lib:fwrite("~2.16.0b", [Byte]) || Byte <- binary_to_list(erlang:md5(Password))]).
