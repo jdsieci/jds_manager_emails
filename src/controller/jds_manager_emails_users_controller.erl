@@ -12,11 +12,15 @@
 %%
 %% Exported Functions
 %%
--export([list/2, add/2, delete/2]).
+-export([index/2, list/2, add/2, delete/2, edit/2]).
 
 %%
 %% API Functions
 %%
+
+index(Method, Rest) ->
+    list(Method, Rest).
+
 list('GET', []) ->
     Users = boss_db:find(email_users, []),
     {ok, [{users, Users}]};
@@ -57,6 +61,23 @@ delete('GET', [UserId]) ->
 delete('POST', []) ->
     boss_db:delete(Req:post_param("user_id")),
     {redirect, [{action, "list"}]}.
+
+edit('GET', [UserId]) ->
+    Domains = boss_db:find(email_domains, []),
+    User = boss_db:find(UserId),
+    io:fwrite("~p~n", [User]),
+    {ok, [{domains, Domains}, {user, User}]};
+edit('POST', [UserId]) ->
+    {Id, UserName, Password, Password2, DomainId} = get_from_post(["id", "username", "password", "password2", "domainid"]),
+    User = boss_db:find(UserId),
+    case edit_user(User, [{username, UserName}, {password, Password}, {domain, DomainId}]) of
+        redirect ->
+            {redirect, [{action, "list"}]};
+        {ok, Rest} ->
+            Domains = boss_db:find(email_domains, []),
+            {ok, [{domains, Domains} | Rest]}
+    end.
+
 %%
 %% Local Functions
 %%
@@ -76,3 +97,17 @@ add_user(Username, Password, DomainID) ->
         {error, ErrorList} ->
             {ok, [{errors, ErrorList}, {new_user, NewUser}]}
     end.
+
+edit_user(User, []) ->
+    case User:save() of
+        {ok, SavedUser} ->
+            redirect;
+        {error, ErrorList} ->
+            {ok, [{errors, ErrorList}, {user, User}]}
+    end;
+edit_user(User, [{username, UserName} | Tail]) ->
+    edit_user(User:set(username, UserName), Tail);
+edit_user(User, [{password, Password} | Tail]) ->
+    edit_user(User:set(password, Password), Tail);
+edit_user(User, [{domain, DomainId} | Tail]) ->
+    edit_user(User:set(email_domains_id, DomainId),Tail).
