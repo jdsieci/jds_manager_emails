@@ -16,7 +16,7 @@
 %% API Functions
 %%
 constraints_create() ->
-    [{fun() -> [] == boss_db:find(email_domains, [{email_domains_id, 'equals', EmailDomainsId}])
+    [{fun() -> [] == boss_db:find(email_domains, [{name, 'equals', Name}])
       end, "Domain exists"}].
 
 
