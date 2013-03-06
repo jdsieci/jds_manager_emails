@@ -11,7 +11,7 @@
 %%
 %% Include files
 %%
-
+-include("email_users.hrl").
 %%
 %% Exported Functions
 %%
@@ -40,8 +40,12 @@ before_create() ->
     {ok, ModifiedRecord}.
 
 before_update() ->
-    ModifiedRecord = set(password, hash_password()),
-    {ok, ModifiedRecord}.
+    #email_users{password = OldPassword} = boss_db:find(Id),
+    case OldPassword == Password of
+        false -> ModifiedRecord = set(password, hash_password()),
+                 {ok, ModifiedRecord};
+        true -> ok
+    end.
 
 
 %%
