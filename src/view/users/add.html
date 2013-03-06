@@ -8,9 +8,7 @@
 </ul>
 {% endif %}
 <form method="post">
-{%if new_user %}
-Username: <input name="username" type="text" value="{{new_user.username}}"/>
-{%endif%}
+Username: <input name="username" type="text" {%if new_user %}value="{{new_user.username}}"{%endif%}/>
 <select name="domainid">
 {% for domain in domains %}
 {%if domain.id == new_user.email_domains_id%}
