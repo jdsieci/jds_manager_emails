@@ -11,11 +11,13 @@
 %%
 %% Exported Functions
 %%
--export([list/2, add/2, delete/2]).
+-export([index/2, list/2, add/2, delete/2]).
 
 %%
 %% API Functions
 %%
+index(Method, Rest) ->
+    list(Method, Rest).
 
 
 list('GET', []) ->
