@@ -1,0 +1,27 @@
+{% extends "universe.html" %}
+{% block content %}
+{% if errors %}
+<ul>
+{%for error in errors%}
+<li><font color="red">{{error}}</font>
+{%endfor%}
+</ul>
+{% endif %}
+<form method="post">
+<input name="id" type="hidden" value="{{user.id}}"/>
+Username: <input name="username" type="text" value="{{user.username}}"/>
+<select name="domainid">
+{% for domain in domains %}
+{%if domain.id == user.email_domains_id%}
+    <option value="{{domain.id}}" selected="selected">{{domain.name}}</option>
+{%else%}
+<option value="{{domain.id}}">{{domain.name}}</option>
+{%endif%}
+{%endfor%}
+</select>
+<br/>
+Password: <input name="password" type="password"/><br/>
+Repeat Passowrd: <input name="password2" type="password"/><br/>
+<input type="submit" value="Submit">
+</form>
+{% endblock %}
