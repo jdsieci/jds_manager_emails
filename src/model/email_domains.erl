@@ -10,11 +10,14 @@
 %%
 %% Exported Functions
 %%
--export([]).
+-export([constraints_create/0]).
 
 %%
 %% API Functions
 %%
+constraints_create() ->
+    [{fun() -> [] == boss_db:find(email_domains, [{email_domains_id, 'equals', EmailDomainsId}])
+      end, "Domain exists"}].
 
 
 
