@@ -15,7 +15,7 @@
 %%
 %% Exported Functions
 %%
--export([validation_tests/0, before_create/0]).
+-export([validation_tests/0, constraints_create/0, before_create/0]).
 
 %%
 %% API Functions
@@ -26,13 +26,15 @@ validation_tests() ->
     %  end, "User exists"}].
     [].
 
+constraints_create() ->
+    [{fun() -> [] == boss_db:find(email_users, [{username, 'equals', Username},
+                                                {email_domains_id, 'equals', EmailDomainsId}])
+      end, "User exists"}].
+
+
 before_create() ->
-    case boss_db:find(email_users, [{username, 'equals', Username},
-                                    {email_domains_id, 'equals', EmailDomainsId}]) of
-        [] -> ok;
-        _ -> {error, ["User Exists"]}
-    end.
+    ok.
+
 %%
 %% Local Functions
 %%
-
